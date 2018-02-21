@@ -6,3 +6,5 @@ services:
     container_name: "gospodar_web"
     volumes:
       - ".:/src"
+    ports:
+      - "3000:3000"
