@@ -1,0 +1,8 @@
+version: "3"
+services:
+  web:
+    build: "."
+    image: "stan/gospodar"
+    container_name: "gospodar_web"
+    volumes:
+      - ".:/src"
