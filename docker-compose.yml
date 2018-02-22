@@ -4,7 +4,9 @@ services:
     build: "."
     image: "stan/gospodar"
     container_name: "gospodar_web"
+    environment:
+      - "PORT=3000"
     volumes:
-      - ".:/src"
+      - ".:/go/src"
     ports:
       - "3000:3000"
