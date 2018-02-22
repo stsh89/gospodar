@@ -8,5 +8,6 @@ import (
 
 func Init() {
 	controllers.RootController()
+	controllers.Registrations()
 	http.ListenAndServe(":" + os.Getenv("PORT"), nil)
 }
