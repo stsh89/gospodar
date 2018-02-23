@@ -1,7 +1,7 @@
 package main
 
 import (
-	"app"
+	"gospodar/app"
 )
 
 func main() {

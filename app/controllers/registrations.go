@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"gospodar/app/config"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -22,6 +23,7 @@ func Registrations() {
 			}
 
 		json, _ := json.Marshal(params)
+		_ = config.DB.QueryRow("INSERT INTO users(email, password) VALUES($1,$2)", params.Email, params.Password)
 		fmt.Fprintf(w, string(json))
 	})
 }
