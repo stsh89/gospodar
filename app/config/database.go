@@ -9,7 +9,7 @@ import (
 var DB *sql.DB
 
 func Database() {
-	dbinfo := fmt.Sprintf("user=%s db_name=%s", "postgres", "gospodar_development")
+	dbinfo := fmt.Sprintf("user=%s host=%s db_name=%s", "postgres", "gospodar_db", "gospodar_development")
 	DB, _ := sql.Open("postgres", dbinfo)
 	DB.Ping()
 }

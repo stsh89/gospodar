@@ -4,6 +4,9 @@ services:
     build: "."
     image: "stan/gospodar"
     container_name: "gospodar_web"
+    command: "psql -U postgres -h gospodar_db -c 'CREATE DATABASE gospodar_development;'"
+    command: "goose postgres 'user=postgres host=gospodar_db sslmode=disable' up"
+    command: "go run main.go"
     depends_on:
       - "db"
     environment:
@@ -15,6 +18,5 @@ services:
   db:
     container_name: "gospodar_db"
     image: "postgres"
-    command: "psql -U postgres -h gospodar_db -c 'CREATE DATABASE gospodar_development;'"
     ports:
       - "5432:5432"
