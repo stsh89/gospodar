@@ -22,8 +22,15 @@ func Registrations() {
 				PasswordConfirmation: r.PostFormValue("passwordConfirmation"),
 			}
 
+		email := ""
 		json, _ := json.Marshal(params)
-		_ = config.DB.QueryRow("INSERT INTO users(email, password) VALUES($1,$2)", params.Email, params.Password)
-		fmt.Fprintf(w, string(json))
+		fmt.Println(string(json))
+		err := config.DB.QueryRow("INSERT INTO users(email, password) VALUES($1,$2) RETURNING email", params.Email, params.Password).Scan(&email)
+
+		if err != nil {
+	    panic(err)
+	  }
+
+		fmt.Fprintf(w, email)
 	})
 }
