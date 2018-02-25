@@ -13,6 +13,11 @@ type registrationParams struct {
 	PasswordConfirmation string
 }
 
+type user struct {
+	Id int
+	Email string
+}
+
 func Registrations() {
 	http.HandleFunc("/registrations", func(w http.ResponseWriter, r *http.Request) {
 		params :=
@@ -22,15 +27,17 @@ func Registrations() {
 				PasswordConfirmation: r.PostFormValue("passwordConfirmation"),
 			}
 
-		email := ""
-		json, _ := json.Marshal(params)
-		fmt.Println(string(json))
-		err := config.DB.QueryRow("INSERT INTO users(email, password) VALUES($1,$2) RETURNING email", params.Email, params.Password).Scan(&email)
+		user := &user{}
+
+		err := config.DB.QueryRow("INSERT INTO users(email, password) VALUES($1,$2) RETURNING id, email",
+						params.Email, params.Password).Scan(&user.Id, &user.Email)
 
 		if err != nil {
 	    panic(err)
 	  }
 
-		fmt.Fprintf(w, email)
+		bytes, _ := json.Marshal(user)
+
+		fmt.Fprintf(w, string(bytes))
 	})
 }
