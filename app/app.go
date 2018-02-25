@@ -11,5 +11,5 @@ func Init() {
 	config.Database()
 	controllers.RootController()
 	controllers.Registrations()
-	http.ListenAndServe(":" + os.Getenv("PORT"), nil)
+	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }

@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"gospodar/app/config"
 	"encoding/json"
 	"fmt"
+	"gospodar/app/config"
 	"net/http"
 )
 
@@ -14,7 +14,7 @@ type registrationParams struct {
 }
 
 type user struct {
-	Id int
+	Id    int
 	Email string
 }
 
@@ -30,11 +30,11 @@ func Registrations() {
 		user := &user{}
 
 		err := config.DB.QueryRow("INSERT INTO users(email, password) VALUES($1,$2) RETURNING id, email",
-						params.Email, params.Password).Scan(&user.Id, &user.Email)
+			params.Email, params.Password).Scan(&user.Id, &user.Email)
 
 		if err != nil {
-	    panic(err)
-	  }
+			panic(err)
+		}
 
 		bytes, _ := json.Marshal(user)
 
