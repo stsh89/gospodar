@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gospodar/app/config"
 	"net/http"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type registrationParams struct {
@@ -28,9 +29,10 @@ func Registrations() {
 			}
 
 		user := &user{}
+		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(params.Password), bcrypt.DefaultCost)
 
 		err := config.DB.QueryRow("INSERT INTO users(email, password) VALUES($1,$2) RETURNING id, email",
-			params.Email, params.Password).Scan(&user.Id, &user.Email)
+			params.Email, string(hashedPassword)).Scan(&user.Id, &user.Email)
 
 		if err != nil {
 			panic(err)
