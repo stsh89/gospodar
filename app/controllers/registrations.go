@@ -6,6 +6,8 @@ import (
 	"gospodar/app/config"
 	"net/http"
 	"golang.org/x/crypto/bcrypt"
+	"net/smtp"
+	"os"
 )
 
 type registrationParams struct {
@@ -21,12 +23,11 @@ type user struct {
 
 func Registrations() {
 	http.HandleFunc("/registrations", func(w http.ResponseWriter, r *http.Request) {
-		params :=
-			&registrationParams{
-				Email:                r.PostFormValue("email"),
-				Password:             r.PostFormValue("password"),
-				PasswordConfirmation: r.PostFormValue("passwordConfirmation"),
-			}
+		params := &registrationParams{
+			Email:                r.PostFormValue("email"),
+			Password:             r.PostFormValue("password"),
+			PasswordConfirmation: r.PostFormValue("passwordConfirmation"),
+		}
 
 		user := &user{}
 		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(params.Password), bcrypt.DefaultCost)
@@ -39,7 +40,31 @@ func Registrations() {
 		}
 
 		bytes, _ := json.Marshal(user)
-
+		sendRegistrationEmail(user.Email)
 		fmt.Fprintf(w, string(bytes))
 	})
+}
+
+func sendRegistrationEmail(emailAddress string) {
+	from := os.Getenv("SMTP_USER_NAME")
+	password := os.Getenv("SMTP_PASSWORD")
+	domain := os.Getenv("SMTP_DOMAIN")
+	port := os.Getenv("SMTP_PORT")
+	msg := "From: " + from + "\n" +
+		"To: " + emailAddress + "\n" +
+		"Subject: Registration\n\n" +
+		"Registration Complete!"
+
+	fmt.Println(from, password, domain, port, msg)
+	err := smtp.SendMail(
+		domain + ":" + port,
+		smtp.PlainAuth("", from, password, domain),
+		from,
+		[]string{emailAddress},
+		[]byte(msg),
+	)
+
+	if err != nil {
+		panic(err)
+	}
 }
