@@ -3,11 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"gospodar/app/config"
 	"net/http"
-	"golang.org/x/crypto/bcrypt"
 	"net/smtp"
-	"os"
 )
 
 type registrationParams struct {
@@ -46,10 +45,10 @@ func Registrations() {
 }
 
 func sendRegistrationEmail(emailAddress string) {
-	from := os.Getenv("SMTP_USER_NAME")
-	password := os.Getenv("SMTP_PASSWORD")
-	domain := os.Getenv("SMTP_DOMAIN")
-	port := os.Getenv("SMTP_PORT")
+	from := config.SmtpUserName
+	password := config.SmtpPassword
+	domain := config.SmtpDomain
+	port := config.SmtpPort
 	msg := "From: " + from + "\n" +
 		"To: " + emailAddress + "\n" +
 		"Subject: Registration\n\n" +
@@ -57,7 +56,7 @@ func sendRegistrationEmail(emailAddress string) {
 
 	fmt.Println(from, password, domain, port, msg)
 	err := smtp.SendMail(
-		domain + ":" + port,
+		domain+":"+port,
 		smtp.PlainAuth("", from, password, domain),
 		from,
 		[]string{emailAddress},

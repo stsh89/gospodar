@@ -4,12 +4,12 @@ import (
 	"gospodar/app/config"
 	"gospodar/app/controllers"
 	"net/http"
-	"os"
 )
 
 func Init() {
+	config.InitGlobalVars()
 	config.Database()
 	controllers.RootController()
 	controllers.Registrations()
-	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	http.ListenAndServe(":"+config.Port, nil)
 }

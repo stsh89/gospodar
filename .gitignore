@@ -15,3 +15,5 @@
 
 # vim artifacts
 *.swp
+
+app/config/secrets.json.sample

@@ -9,7 +9,11 @@ import (
 var DB *sql.DB
 
 func Database() {
-	dbinfo := fmt.Sprintf("user=%s host=%s dbname=%s sslmode=disable", "postgres", "gospodar_db", "gospodar_development")
+	fmt.Println("Database initialize")
+	fmt.Println(DatabaseUser, DatabaseHost, DatabaseName, DatabaseSslmode)
+
+	dbinfo := fmt.Sprintf("user=%s host=%s dbname=%s sslmode=disable",
+		DatabaseUser, DatabaseHost, DatabaseName, DatabaseSslmode)
 	DB, _ = sql.Open("postgres", dbinfo)
 	DB.Ping()
 }
